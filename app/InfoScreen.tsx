@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     height: "65%",},
   paragraph: {
     color: "#80043A",
-    fontSize: 16,
+    fontSize:width > 768 ? 24 : 16,
     marginTop:40,
     textAlign: "center",
   },
