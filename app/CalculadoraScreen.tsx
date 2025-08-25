@@ -166,15 +166,16 @@ export default function CalculatorScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, // ocupa todo el espacio disponible
     backgroundColor: "#fff7cc",
     alignItems: "center",
-    padding: 20,
     justifyContent: "flex-start",
-    maxWidth: 500, // límite tipo web
-    alignSelf: "center", // centra en pantallas grandes
+    padding: 20,
+    width: "100%", // asegura que ocupe todo el ancho
+    minHeight: Dimensions.get("window").height, // asegura que tenga al menos el alto de la pantalla
   },
 
   titulo: {
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#F60C49",
     marginTop: Platform.OS === "web" ? 0 : -30,
-    marginBottom: 15,
+    marginBottom: 35,
     textAlign: "center"
   },
 
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
     marginBottom: 15, // espacio entre pantalla y botones
     textAlign: "right",
   },
-  displayText: { fontSize: 22, fontWeight: "bold", textAlign: "right", color: "#000" },
+  displayText: { fontSize: width > 768 ? 22 : 16, fontWeight: "bold", textAlign: "right", color: "#000" },
 
   row: { flexDirection: "row", justifyContent: "space-between", width: "100%", marginVertical: 5 },
 

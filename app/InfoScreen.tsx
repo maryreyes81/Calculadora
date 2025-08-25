@@ -1,5 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Link } from "expo-router";
+import { Dimensions } from 'react-native';
+
+const { width } = Dimensions.get("window");
+
 
 export default function AboutScreen() {
   return (
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize:width > 768 ? 32 : 24,
     fontWeight: "bold",
     color: "#F60C49",
     marginBottom: 20,
