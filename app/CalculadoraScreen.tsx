@@ -1,16 +1,27 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+ View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  Dimensions,
+  Platform,
+} from "react-native";
 import { Link } from "expo-router";
-import { Dimensions } from "react-native";
-import { Platform } from "react-native";
-import { ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 const { width, height } = Dimensions.get("window");
 
+
 export default function CalculatorScreen() {
+  const insets = useSafeAreaInsets();
   const [input, setInput] = useState<string>("");
   const [result, setResult] = useState<string>("");
+  const [justCalculated, setJustCalculated] = useState<boolean>(false);
+  const [expression, setExpression] = useState<string>("");
 
   //  Formatear números sin romper cuando está vacío
   const formatNumber = (n: string): string => {
@@ -39,8 +50,7 @@ export default function CalculatorScreen() {
     setExpression("");
   };
 
-  const [justCalculated, setJustCalculated] = useState<boolean>(false);
-  const [expression, setExpression] = useState<string>("");
+
   const sanitizeExpression = (expr: string): string => {
     return expr.replace(/(\d+(\.\d+)?)/g, (match) => {
       // Elimina ceros iniciales, pero conserva "0" y decimales como "0.5"
@@ -67,7 +77,9 @@ export default function CalculatorScreen() {
 
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff7cc" }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={styles.container}>
       {/*  Botón arriba a la izquierda */}
       <View style={styles.topBtnContainer}>
         <Link href="/HomeScreen" style={styles.btnNav}>
@@ -79,21 +91,28 @@ export default function CalculatorScreen() {
       <Text style={styles.titulo}>Calculadora</Text>
 
       {/* Caja de la calculadora */}
-      <View style={styles.calcBox}>
+      <View
+            style={[
+              styles.calcBox,
+              { marginBottom: insets.bottom + (Platform.OS !== "web" && height < 750 ? 40 : 0) },
+            ]}
+          >
         {/* Pantalla */}
-        <View style={styles.display}>
-          <Text style={styles.displayText}>
-            {result !== "" && result !== "Error"
-              ? `${expression} = ${formatNumber(result)}`
-              : input || "0"}
-          </Text>
-          {result === "Error" && (
-            <Text style={[styles.displayText, { color: "red", marginTop: 5 }]}>
-              Error
-            </Text>
-          )}
-        </View>
-
+          <View style={styles.display}>
+              <Text style={styles.displayText}>
+                {result !== "" && result !== "Error"
+                  ? `${expression} = ${formatNumber(result)}`
+                  : input || "0"}
+              </Text>
+              {result === "Error" && (
+                <Text
+                  style={[styles.displayText, { color: "red", marginTop: 5 }]}
+                >
+                  Error
+                </Text>
+              )}
+            </View>
+  
 
 
         {/* Botón Limpiar y Operadores */}
@@ -161,8 +180,10 @@ export default function CalculatorScreen() {
         <Link href="/InfoScreen" style={styles.btnNav}>
           <Text style={styles.btnNavText}>Acerca de</Text>
         </Link>
-      </View>
-    </View>
+          </View>
+        </View>
+        </ScrollView>
+      </SafeAreaView>
   );
 }
 
@@ -173,16 +194,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff7cc",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: 20,
+    padding: width*0.02,
     width: "100%", // asegura que ocupe todo el ancho
-    minHeight: Dimensions.get("window").height, // asegura que tenga al menos el alto de la pantalla
+    minHeight: height // asegura que tenga al menos el alto de la pantalla
   },
 
   titulo: {
-    fontSize: Platform.OS === "web" ? 64 : 48,
+    fontSize: Platform.OS === "web" ? 52 : 35,
     fontWeight: "bold",
     color: "#F60C49",
-    marginTop: Platform.OS === "web" ? 0 : -30,
+    marginTop: Platform.OS === "web" ? 10 : -30,
     marginBottom: 35,
     textAlign: "center"
   },
@@ -190,9 +211,9 @@ const styles = StyleSheet.create({
   calcBox: {
     backgroundColor: "#101942",
     borderRadius: 20,
-    padding: 15,
+    padding:15,
     width: "100%",
-    maxWidth: 320,
+    maxWidth: Platform.OS === "web" ? 350 : 320,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -200,13 +221,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5, // para Android
+    marginBottom: Platform.OS !== "web" && height < 750 ? 5 : 30,
+    marginHorizontal:Platform.OS !== "web" && height < 750 ? 0 : 100,
   },
 
   display: {
     backgroundColor: "#d9d9d9",
     width: "100%",
     borderRadius: 5,
-    padding: 5,
+    padding: 12,
     marginTop: 10,
     marginBottom: 15, // espacio entre pantalla y botones
     textAlign: "right",
@@ -246,22 +269,27 @@ const styles = StyleSheet.create({
   btnTextBlack: { color: "#000", fontSize: 18, fontWeight: "bold" },
   btnTextRed: { color: "#F60C49", fontSize: 20, fontWeight: "bold" },
 
+  
   // Botón arriba izquierda
   topBtnContainer: {
     alignItems: "flex-start",
-    marginTop: 40,
+    marginTop: Platform.OS !== "web" && height < 750 ? 25 : 20,
+    marginBottom:Platform.OS !== "web" && height < 750 ? 20 : 10,
     width: "100%", // asegura que se vaya a la izquierda
-    marginLeft: 50,
+    marginLeft: Platform.OS !== "web" && height < 750 ? 40 : 50,
   },
 
   //  Botón abajo derecha
-  bottomBtnContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-    marginBottom: 20,
-    width: "100%",
-  },
+  
+bottomBtnContainer: {
+  flex: 1,
+  justifyContent: "flex-end",
+  alignItems: "flex-end",
+  marginTop: Platform.OS !== "web" && height < 750 ? 25 : 10,
+  marginBottom: Platform.OS !== "web" && height < 750 ? 20 : 20,
+  width: "100%",
+},
+
 
   btnNav: {
     backgroundColor: "#F60C49",
@@ -270,5 +298,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 50
   },
-  btnNavText: { color: "#101942", fontWeight: "bold", fontSize: 22 },
+  btnNavText: { color: "#101942", fontWeight: "bold", fontSize: width < 400 ? 16 : width < 600 ? 18 : 22 },
 });

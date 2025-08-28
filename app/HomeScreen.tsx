@@ -1,7 +1,11 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 
+const { width, height } = Dimensions.get("window");
+
 export default function HomeScreen() {
+    const insets = useSafeAreaInsets();
     return (
         <View style={styles.container}>
             <Text style={styles.titulo}>Bienvenido a la Calculadora</Text>
@@ -32,12 +36,13 @@ export default function HomeScreen() {
                 <Text style={styles.feature}>• Operaciones: +, -, *, ÷</Text>
                 <Text style={styles.feature}>• Botón de igual (=) para calcular</Text>
                 <Text style={styles.feature}>• Punto decimal para números decimales</Text>
-                <Text style={styles.feature}>• Botón "Limpiar" para reiniciar</Text>
+                <Text style={styles.feature}>• Botón Limpiar para reiniciar</Text>
                 <Text style={styles.feature}>• Pantalla clara y fácil de leer</Text>
             </View>
 
             {/* Botón para ir a la Calculadora */}
-            <View style={styles.btnContainer}>
+           
+ <View style={[styles.btnContainer, { paddingBottom: insets.bottom + 10 }]}>
                 <Link href="/CalculadoraScreen" style={styles.btn}>
                     <Text style={styles.btnText}>Comenzar a Calcular</Text>
                 </Link>
@@ -45,6 +50,7 @@ export default function HomeScreen() {
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1, // Ocupa toda la pantalla
@@ -52,18 +58,18 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
-        padding: 20,
+        padding: width * 0.05,
     },
     titulo: {
-        fontSize: 32,
+        fontSize: width < 400 ? 24 : 32, 
         fontWeight: "bold",
         color: "#80043A",
-        marginTop: 35,
-        marginBottom: 60,
+        marginTop: height * 0.01,
+        marginBottom: height * 0.06,
         textAlign: "center",
     },
     row: {
-        flexDirection: "row",
+        flexDirection: width < 600 ? "column" : "row",
         justifyContent: "space-around",
         alignItems: "center", // 🔹 Centrado vertical
         marginBottom: 50,
@@ -72,17 +78,19 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: "#F09580",
         borderRadius: 10,
-        padding: 15,
+        padding: width * 0.04,
         alignItems: "center",
         justifyContent: "center",
-        marginHorizontal: 10,
-        width: "28%",
-        height: 160,
+         marginVertical: width < 600 ? 10 : 0,
+        marginHorizontal: width < 600 ? 0 : 10,
+        width: width < 600 ? "80%" : "28%", //  ocupa más ancho en móvil
+        height: height * 0.25,
+
     },
     featureTitle: {
         color: "#80043A",
         fontWeight: "bold",
-        fontSize: 18,
+        fontSize: width < 400 ? 16 : 18,
         marginBottom: 10,
         textAlign: "center",
     },
@@ -95,12 +103,12 @@ const styles = StyleSheet.create({
     featuresBox: {
         backgroundColor: "#F09580",
         borderRadius: 10,
-        padding: 15,
-        marginBottom: 30,
+        padding: width * 0.04,
+        marginBottom: height * 0.04,
         width: "90%",
         alignSelf: "center",
         alignItems: "center",
-        height: 220,
+        minHeight: height * 0.30,
     },
     feature: {
         color: "#F60C49",
@@ -108,21 +116,22 @@ const styles = StyleSheet.create({
     },
     btnContainer: {
         flexDirection: "row",
-        justifyContent: "flex-end", // 🔹 Botón a la derecha
+        justifyContent: "flex-end", // Botón a la derecha
         width: "100%",
+        marginBottom: Platform.OS !== "web" && height < 750 ? 40 : 20,
     },
     btn: {
         backgroundColor: "#F60C49",
         paddingVertical: 12,
-        marginRight: 60,
+        marginRight: width < 400 ? 20 : 60,
         height: 40,
-        paddingHorizontal: 40,
+        paddingHorizontal: width * 0.08,
         borderRadius: 8,
     },
     btnText: {
         color: "#101942",
         fontWeight: "bold",
-        fontSize: 16,
+        fontSize: width < 400 ? 14 : 16,
        textAlign: "center",
     },
 });
