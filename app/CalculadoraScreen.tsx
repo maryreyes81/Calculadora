@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
- View,
+  View,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -9,21 +9,20 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
+
 import { Link } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-
 const { width, height } = Dimensions.get("window");
-
 
 export default function CalculatorScreen() {
   const insets = useSafeAreaInsets();
-  const [input, setInput] = useState<string>("");
-  const [result, setResult] = useState<string>("");
-  const [justCalculated, setJustCalculated] = useState<boolean>(false);
-  const [expression, setExpression] = useState<string>("");
+  const [input, setInput] = useState("");
+  const [result, setResult] = useState("");
+  const [justCalculated, setJustCalculated] = useState(false);
+  const [expression, setExpression] = useState("");
 
-  //  Formatear números sin romper cuando está vacío
+  // Formatear números
   const formatNumber = (n: string): string => {
     if (!n) return "0";
     const parsed = parseFloat(n);
@@ -44,29 +43,30 @@ export default function CalculatorScreen() {
       setInput((prev) => prev + val);
     }
   };
+
   const clear = () => {
     setInput("");
     setResult("");
     setExpression("");
   };
 
-
-  const sanitizeExpression = (expr: string): string => {
-    return expr.replace(/(\d+(\.\d+)?)/g, (match) => {
-      // Elimina ceros iniciales, pero conserva "0" y decimales como "0.5"
-      if (match.startsWith("0") && !match.startsWith("0.") && match !== "0") {
-        return parseFloat(match).toString();
+  const sanitizeExpression = (expr: string) =>
+    expr.replace(/(\d+(\.\d+)?)/g, (m) => {
+      if (m.startsWith("0") && !m.startsWith("0.") && m !== "0") {
+        return parseFloat(m).toString();
       }
-      return match;
+      return m;
     });
-  };
 
   const calculate = () => {
     try {
-      const cleaned = sanitizeExpression(input.replace(/x/g, "*").replace(/÷/g, "/"));
+      const cleaned = sanitizeExpression(
+        input.replace(/x/g, "*").replace(/÷/g, "/")
+      );
+      // eslint-disable-next-line no-eval
       const res = eval(cleaned);
-      setExpression(input); // guarda la operación original
-      setResult(res.toString()); // guarda el resultado
+      setExpression(input);
+      setResult(res.toString());
       setJustCalculated(true);
     } catch {
       setExpression(input);
@@ -75,143 +75,210 @@ export default function CalculatorScreen() {
     }
   };
 
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff7cc" }}>
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={styles.container}>
-      {/*  Botón arriba a la izquierda */}
-      <View style={styles.topBtnContainer}>
-        <Link href="/HomeScreen" style={styles.btnNav}>
-          <Text style={styles.btnNavText}>Regresar a Inicio</Text>
-        </Link>
-      </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "#fff7cc",
+        ...(Platform.OS === "web" ? { minHeight: "100vh" as any } : null),
+      }}
+    >
+      {/* ⬇️ WEB sin scroll: View | ⬇️ MÓVIL con scroll: ScrollView */}
+      {Platform.OS === "web" ? (
+        <View style={[styles.container, { paddingBottom: 140 }]}>
+          {/* TOP BUTTON */}
+          <View style={styles.topBtnContainer}>
+            <Link href="/HomeScreen" style={styles.btnNav}>
+              <Text style={styles.btnNavText}>Regresar a Inicio</Text>
+            </Link>
+          </View>
 
+          <Text style={styles.titulo}>Calculadora</Text>
 
-      <Text style={styles.titulo}>Calculadora</Text>
-
-      {/* Caja de la calculadora */}
-      <View
-            style={[
-              styles.calcBox,
-              { marginBottom: insets.bottom + (Platform.OS !== "web" && height < 750 ? 40 : 0) },
-            ]}
-          >
-        {/* Pantalla */}
-          <View style={styles.display}>
+          {/* CALC BOX */}
+          <View style={[styles.calcBox, { marginTop: -10 }]}>
+            {/* DISPLAY */}
+            <View style={styles.display}>
               <Text style={styles.displayText}>
                 {result !== "" && result !== "Error"
                   ? `${expression} = ${formatNumber(result)}`
                   : input || "0"}
               </Text>
               {result === "Error" && (
-                <Text
-                  style={[styles.displayText, { color: "red", marginTop: 5 }]}
-                >
+                <Text style={[styles.displayText, { color: "red", marginTop: 5 }]}>
                   Error
                 </Text>
               )}
             </View>
-  
 
+            {/* ROWS */}
+            <View style={styles.row}>
+              <TouchableOpacity style={styles.btnGrayWide} onPress={clear}>
+                <Text style={styles.btnTextBlack}>Limpiar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("÷")}>
+                <Text style={styles.btnTextRed}>÷</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("*")}>
+                <Text style={styles.btnTextRed}>*</Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Botón Limpiar y Operadores */}
-        <View style={styles.row}>
-          <TouchableOpacity style={styles.btnGrayWide} onPress={clear}>
-            <Text style={styles.btnTextBlack}>Limpiar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("÷")}>
-            <Text style={styles.btnTextRed}>÷</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("*")}>
-            <Text style={styles.btnTextRed}>*</Text>
-          </TouchableOpacity>
+            {[
+              ["7", "8", "9", "-"],
+              ["4", "5", "6", "+"],
+              ["1", "2", "3", "="],
+            ].map((row, idx) => (
+              <View style={styles.row} key={idx}>
+                {row.map((val) => (
+                  <TouchableOpacity
+                    key={val}
+                    style={styles.btnGray}
+                    onPress={val === "=" ? calculate : () => handlePress(val)}
+                  >
+                    <Text
+                      style={
+                        ["+", "-", "=", "÷", "*"].includes(val)
+                          ? styles.btnTextRed
+                          : styles.btnTextBlack
+                      }
+                    >
+                      {val}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ))}
+
+            <View style={styles.row}>
+              <TouchableOpacity style={styles.btnGrayWide2} onPress={() => handlePress("0")}>
+                <Text style={styles.btnTextBlack}>0</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress(".")}>
+                <Text style={styles.btnTextBlack}>.</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
+      ) : (
+        <ScrollView contentContainerStyle={[styles.container, { paddingBottom: 24 + insets.bottom }]}>
+          {/* TOP BUTTON */}
+          <View style={styles.topBtnContainer}>
+            <Link href="/HomeScreen" style={styles.btnNav}>
+              <Text style={styles.btnNavText}>Regresar a Inicio</Text>
+            </Link>
+          </View>
 
-        {/* Filas de números */}
-        <View style={styles.row}>
-          {["7", "8", "9", "-"].map((val) => (
-            <TouchableOpacity
-              key={val}
-              style={styles.btnGray}
-              onPress={() => (val === "-" ? handlePress(val) : handlePress(val))}
-            >
-              <Text style={val === "-" ? styles.btnTextRed : styles.btnTextBlack}>{val}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+          <Text style={styles.titulo}>Calculadora</Text>
 
-        <View style={styles.row}>
-          {["4", "5", "6", "+"].map((val) => (
-            <TouchableOpacity
-              key={val}
-              style={styles.btnGray}
-              onPress={() => (val === "+" ? handlePress(val) : handlePress(val))}
-            >
-              <Text style={val === "+" ? styles.btnTextRed : styles.btnTextBlack}>{val}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+          {/* CALC BOX */}
+          <View style={styles.calcBox}>
+            {/* DISPLAY */}
+            <View style={styles.display}>
+              <Text style={styles.displayText}>
+                {result !== "" && result !== "Error"
+                  ? `${expression} = ${formatNumber(result)}`
+                  : input || "0"}
+              </Text>
+              {result === "Error" && (
+                <Text style={[styles.displayText, { color: "red", marginTop: 5 }]}>
+                  Error
+                </Text>
+              )}
+            </View>
 
-        <View style={styles.row}>
-          {["1", "2", "3", "="].map((val) => (
-            <TouchableOpacity
-              key={val}
-              style={styles.btnGray}
-              onPress={val === "=" ? calculate : () => handlePress(val)}
-            >
-              <Text style={val === "=" ? styles.btnTextRed : styles.btnTextBlack}>{val}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+            {/* ROWS */}
+            <View style={styles.row}>
+              <TouchableOpacity style={styles.btnGrayWide} onPress={clear}>
+                <Text style={styles.btnTextBlack}>Limpiar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("÷")}>
+                <Text style={styles.btnTextRed}>÷</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("*")}>
+                <Text style={styles.btnTextRed}>*</Text>
+              </TouchableOpacity>
+            </View>
 
-        <View style={styles.row}>
-          <TouchableOpacity style={styles.btnGrayWide2} onPress={() => handlePress("0")}>
-            <Text style={styles.btnTextBlack}>0</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnGray} onPress={() => handlePress(".")}>
-            <Text style={styles.btnTextBlack}>.</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+            {[
+              ["7", "8", "9", "-"],
+              ["4", "5", "6", "+"],
+              ["1", "2", "3", "="],
+            ].map((row, idx) => (
+              <View style={styles.row} key={idx}>
+                {row.map((val) => (
+                  <TouchableOpacity
+                    key={val}
+                    style={styles.btnGray}
+                    onPress={val === "=" ? calculate : () => handlePress(val)}
+                  >
+                    <Text
+                      style={
+                        ["+", "-", "=", "÷", "*"].includes(val)
+                          ? styles.btnTextRed
+                          : styles.btnTextBlack
+                      }
+                    >
+                      {val}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ))}
 
-      {/* Navegación con Links */}
-      <View style={styles.bottomBtnContainer}>
+            <View style={styles.row}>
+              <TouchableOpacity style={styles.btnGrayWide2} onPress={() => handlePress("0")}>
+                <Text style={styles.btnTextBlack}>0</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress(".")}>
+                <Text style={styles.btnTextBlack}>.</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      )}
+
+      {/*  BOTTOM BUTTON */}
+      <View
+        style={[
+          styles.bottomBtnContainerBase,
+          Platform.OS === "web"
+            ? styles.bottomBtnContainerWeb
+            : styles.bottomBtnContainerMobile,
+        ]}
+      >
         <Link href="/InfoScreen" style={styles.btnNav}>
           <Text style={styles.btnNavText}>Acerca de</Text>
         </Link>
-          </View>
-        </View>
-        </ScrollView>
-      </SafeAreaView>
+      </View>
+    </SafeAreaView>
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // ocupa todo el espacio disponible
+    flex: 1,
     backgroundColor: "#fff7cc",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: width*0.02,
-    width: "100%", // asegura que ocupe todo el ancho
-    minHeight: height // asegura que tenga al menos el alto de la pantalla
+    padding: width * 0.02,
+    width: "100%",
+    minHeight: height,
   },
 
   titulo: {
     fontSize: Platform.OS === "web" ? 52 : 35,
     fontWeight: "bold",
     color: "#F60C49",
-    marginTop: Platform.OS === "web" ? 10 : -30,
+    marginTop: Platform.OS === "web" ? -25 : -30, // tu ajuste
     marginBottom: 35,
-    textAlign: "center"
+    textAlign: "center",
   },
 
   calcBox: {
     backgroundColor: "#101942",
     borderRadius: 20,
-    padding:15,
+    padding: 15,
     width: "100%",
     maxWidth: Platform.OS === "web" ? 350 : 320,
     alignItems: "center",
@@ -220,9 +287,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5, // para Android
+    elevation: 5,
     marginBottom: Platform.OS !== "web" && height < 750 ? 5 : 30,
-    marginHorizontal:Platform.OS !== "web" && height < 750 ? 0 : 100,
+    marginHorizontal: Platform.OS !== "web" && height < 750 ? 0 : 100,
   },
 
   display: {
@@ -231,22 +298,33 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 12,
     marginTop: 10,
-    marginBottom: 15, // espacio entre pantalla y botones
-    textAlign: "right",
+    marginBottom: 15,
   },
-  displayText: { fontSize: width > 768 ? 22 : 16, fontWeight: "bold", textAlign: "right", color: "#000" },
 
-  row: { flexDirection: "row", justifyContent: "space-between", width: "100%", marginVertical: 5 },
+  displayText: {
+    fontSize: width < 400 ? 18 : 22,
+    fontWeight: "bold",
+    textAlign: "right",
+    color: "#000",
+  },
+
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginVertical: 5,
+  },
 
   btnGray: {
     backgroundColor: "#d9d9d9",
-    flexBasis: "22%", // 4 botones por fila
+    flexBasis: width < 400 ? "30%" : "22%",
     margin: 3,
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
   },
+
   btnGrayWide: {
     backgroundColor: "#d9d9d9",
     flex: 2,
@@ -256,9 +334,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
   btnGrayWide2: {
     backgroundColor: "#d9d9d9",
-    flex: 2,
+    flex: 2, // cambia a 3 si quieres "0" triple
     margin: 3,
     padding: 15,
     borderRadius: 5,
@@ -266,37 +345,54 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  btnTextBlack: { color: "#000", fontSize: 18, fontWeight: "bold" },
-  btnTextRed: { color: "#F60C49", fontSize: 20, fontWeight: "bold" },
-
-  
-  // Botón arriba izquierda
-  topBtnContainer: {
-    alignItems: "flex-start",
-    marginTop: Platform.OS !== "web" && height < 750 ? 25 : 20,
-    marginBottom:Platform.OS !== "web" && height < 750 ? 20 : 10,
-    width: "100%", // asegura que se vaya a la izquierda
-    marginLeft: Platform.OS !== "web" && height < 750 ? 40 : 50,
+  btnTextBlack: {
+    color: "#000",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 
-  //  Botón abajo derecha
-  
-bottomBtnContainer: {
-  flex: 1,
-  justifyContent: "flex-end",
-  alignItems: "flex-end",
-  marginTop: Platform.OS !== "web" && height < 750 ? 25 : 10,
-  marginBottom: Platform.OS !== "web" && height < 750 ? 20 : 20,
-  width: "100%",
-},
+  btnTextRed: {
+    color: "#F60C49",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
 
+  topBtnContainer: {
+    alignItems: "flex-start",
+    width: "100%",
+    paddingHorizontal: 20,
+    marginTop: Platform.OS !== "web" && height < 750 ? 25 : 20,
+    marginBottom: 15,
+  },
+
+  // Estilos del botón inferior (limpios y combinables)
+  bottomBtnContainerBase: {
+    alignItems: "flex-end",
+  },
+  bottomBtnContainerMobile: {
+    width: "100%",
+    paddingHorizontal: 20,
+    marginBottom: 30,
+  },
+  bottomBtnContainerWeb: {
+    position: "fixed",
+    right: 20,
+    bottom: 20,
+    width: "auto",
+    zIndex: 999,
+    paddingHorizontal: 0,
+  },
 
   btnNav: {
     backgroundColor: "#F60C49",
     paddingVertical: 8,
     paddingHorizontal: 50,
     borderRadius: 8,
-    marginRight: 50
   },
-  btnNavText: { color: "#101942", fontWeight: "bold", fontSize: width < 400 ? 16 : width < 600 ? 18 : 22 },
+
+  btnNavText: {
+    color: "#101942",
+    fontWeight: "bold",
+    fontSize: width < 400 ? 16 : width < 600 ? 18 : 22,
+  },
 });
