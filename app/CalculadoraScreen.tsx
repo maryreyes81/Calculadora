@@ -113,13 +113,13 @@ export default function CalculatorScreen() {
 
             {/* ROWS */}
             <View style={styles.row}>
-              <TouchableOpacity style={styles.btnGrayWide} onPress={clear}>
+              <TouchableOpacity style={[styles.btn, styles.btnWide2]} onPress={clear}>
                 <Text style={styles.btnTextBlack}>Limpiar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("÷")}>
+              <TouchableOpacity style={styles.btn} onPress={() => handlePress("÷")}>
                 <Text style={styles.btnTextRed}>÷</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("*")}>
+              <TouchableOpacity style={styles.btn} onPress={() => handlePress("*")}>
                 <Text style={styles.btnTextRed}>*</Text>
               </TouchableOpacity>
             </View>
@@ -133,7 +133,7 @@ export default function CalculatorScreen() {
                 {row.map((val) => (
                   <TouchableOpacity
                     key={val}
-                    style={styles.btnGray}
+                    style={styles.btn}
                     onPress={val === "=" ? calculate : () => handlePress(val)}
                   >
                     <Text
@@ -150,18 +150,19 @@ export default function CalculatorScreen() {
               </View>
             ))}
 
+            {/* Última fila: "0" ancho triple + "." */}
             <View style={styles.row}>
-              <TouchableOpacity style={styles.btnGrayWide2} onPress={() => handlePress("0")}>
+              <TouchableOpacity style={[styles.btn, styles.btnWide3]} onPress={() => handlePress("0")}>
                 <Text style={styles.btnTextBlack}>0</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress(".")}>
+              <TouchableOpacity style={styles.btn} onPress={() => handlePress(".")}>
                 <Text style={styles.btnTextBlack}>.</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={[styles.container, { paddingBottom: 24 + insets.bottom }]}>
+        <ScrollView contentContainerStyle={[styles.container, { paddingBottom: 36 + insets.bottom }]}>
           {/* TOP BUTTON */}
           <View style={styles.topBtnContainer}>
             <Link href="/HomeScreen" style={styles.btnNav}>
@@ -189,13 +190,13 @@ export default function CalculatorScreen() {
 
             {/* ROWS */}
             <View style={styles.row}>
-              <TouchableOpacity style={styles.btnGrayWide} onPress={clear}>
+              <TouchableOpacity style={[styles.btn, styles.btnWide2]} onPress={clear}>
                 <Text style={styles.btnTextBlack}>Limpiar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("÷")}>
+              <TouchableOpacity style={styles.btn} onPress={() => handlePress("÷")}>
                 <Text style={styles.btnTextRed}>÷</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress("*")}>
+              <TouchableOpacity style={styles.btn} onPress={() => handlePress("*")}>
                 <Text style={styles.btnTextRed}>*</Text>
               </TouchableOpacity>
             </View>
@@ -209,7 +210,7 @@ export default function CalculatorScreen() {
                 {row.map((val) => (
                   <TouchableOpacity
                     key={val}
-                    style={styles.btnGray}
+                    style={styles.btn}
                     onPress={val === "=" ? calculate : () => handlePress(val)}
                   >
                     <Text
@@ -226,11 +227,12 @@ export default function CalculatorScreen() {
               </View>
             ))}
 
+            {/* Última fila: "0" ancho triple + "." */}
             <View style={styles.row}>
-              <TouchableOpacity style={styles.btnGrayWide2} onPress={() => handlePress("0")}>
+              <TouchableOpacity style={[styles.btn, styles.btnWide3]} onPress={() => handlePress("0")}>
                 <Text style={styles.btnTextBlack}>0</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnGray} onPress={() => handlePress(".")}>
+              <TouchableOpacity style={styles.btn} onPress={() => handlePress(".")}>
                 <Text style={styles.btnTextBlack}>.</Text>
               </TouchableOpacity>
             </View>
@@ -261,24 +263,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff7cc",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: width * 0.02,
+    padding: 16,
     width: "100%",
     minHeight: height,
   },
 
   titulo: {
-    fontSize: Platform.OS === "web" ? 52 : 30, // ↓ más chico en móvil
+    fontSize: Platform.OS === "web" ? 52 : 28, // ↓ móvil
     fontWeight: "bold",
     color: "#F60C49",
-    marginTop: Platform.OS === "web" ? -25 : -24, // ajuste móvil
-    marginBottom: 28, // un poco menos
+    marginTop: Platform.OS === "web" ? -25 : -16,
+    marginBottom: Platform.OS === "web" ? 30 : 24,
     textAlign: "center",
   },
 
   calcBox: {
     backgroundColor: "#101942",
     borderRadius: 20,
-    padding: Platform.OS === "web" ? 15 : 12, // ↓ móvil
+    padding: Platform.OS === "web" ? 16 : 12, // ↓ móvil
     width: "100%",
     maxWidth: Platform.OS === "web" ? 350 : 300, // ↓ móvil
     alignItems: "center",
@@ -288,17 +290,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginBottom: Platform.OS !== "web" && height < 750 ? 5 : 24, // ↓ móvil
-    marginHorizontal: Platform.OS !== "web" && height < 750 ? 0 : 100,
+    marginBottom: Platform.OS === "web" ? 24 : 16,
   },
 
   display: {
     backgroundColor: "#d9d9d9",
     width: "100%",
-    borderRadius: 5,
+    borderRadius: 6,
     padding: Platform.OS === "web" ? 12 : 10, // ↓ móvil
     marginTop: 8,
-    marginBottom: 12,
+    marginBottom: 10,
   },
 
   displayText: {
@@ -310,39 +311,31 @@ const styles = StyleSheet.create({
 
   row: {
     flexDirection: "row",
-    justifyContent: "space-between",
     width: "100%",
     marginVertical: 4,
+    // no usamos space-between para evitar desbordes
   },
 
-  btnGray: {
+  // Botón base: elástico
+  btn: {
     backgroundColor: "#d9d9d9",
-    flexBasis: width < 400 ? "30%" : "22%",
-    margin: 3,
+    flex: 1,                // ← quepan 4 por fila
+    marginHorizontal: 4,    // ← separación lateral
+    marginVertical: 3,
     paddingVertical: Platform.OS === "web" ? 15 : 12, // ↓ móvil
-    borderRadius: 5,
+    borderRadius: 6,
     alignItems: "center",
     justifyContent: "center",
   },
 
-  btnGrayWide: {
-    backgroundColor: "#d9d9d9",
+  // “Limpiar” ocupa 2 columnas
+  btnWide2: {
     flex: 2,
-    margin: 3,
-    padding: Platform.OS === "web" ? 15 : 12, // ↓ móvil
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
   },
 
-  btnGrayWide2: {
-    backgroundColor: "#d9d9d9",
-    flex: 2, // pon 3 si quieres "0" triple
-    margin: 3,
-    padding: Platform.OS === "web" ? 15 : 12, // ↓ móvil
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
+  // “0” ocupa 3 columnas
+  btnWide3: {
+    flex: 3,
   },
 
   btnTextBlack: {
@@ -360,8 +353,8 @@ const styles = StyleSheet.create({
   topBtnContainer: {
     alignItems: "flex-start",
     width: "100%",
-    paddingHorizontal: 20,
-    marginTop: Platform.OS !== "web" && height < 750 ? 25 : 20,
+    paddingHorizontal: 8,
+    marginTop: Platform.OS !== "web" && height < 750 ? 25 : 16,
     marginBottom: 12,
   },
 
@@ -386,7 +379,7 @@ const styles = StyleSheet.create({
   btnNav: {
     backgroundColor: "#F60C49",
     paddingVertical: 8,
-    paddingHorizontal: 44, // un poco menos
+    paddingHorizontal: 44,
     borderRadius: 8,
   },
 
