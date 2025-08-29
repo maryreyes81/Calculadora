@@ -65,8 +65,15 @@ export default function CalculatorScreen() {
       );
       // eslint-disable-next-line no-eval
       const res = eval(cleaned);
-      setExpression(input);
-      setResult(res.toString());
+
+      if (res === Infinity || res === -Infinity || isNaN(res)) {
+        setExpression(input);
+        setResult("Error");
+      } else {
+        setExpression(input);
+        setResult(res.toString());
+      }
+
       setJustCalculated(true);
     } catch {
       setExpression(input);
@@ -269,7 +276,7 @@ const styles = StyleSheet.create({
   },
 
   titulo: {
-    fontSize: Platform.OS === "web" ? 52 : 28, //  móvil
+    fontSize: Platform.OS === "web" ? 52 : 28,
     fontWeight: "bold",
     color: "#F60C49",
     marginTop: Platform.OS === "web" ? -25 : -16,
@@ -280,9 +287,9 @@ const styles = StyleSheet.create({
   calcBox: {
     backgroundColor: "#101942",
     borderRadius: 20,
-    padding: Platform.OS === "web" ? 16 : 12, //  móvil
+    padding: Platform.OS === "web" ? 16 : 12,
     width: "100%",
-    maxWidth: Platform.OS === "web" ? 350 : 300, //  móvil
+    maxWidth: Platform.OS === "web" ? 350 : 300,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -297,13 +304,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#d9d9d9",
     width: "100%",
     borderRadius: 6,
-    padding: Platform.OS === "web" ? 12 : 10, //  móvil
+    padding: Platform.OS === "web" ? 12 : 10,
     marginTop: 8,
     marginBottom: 10,
   },
 
   displayText: {
-    fontSize: Platform.OS === "web" ? (width < 400 ? 18 : 22) : 16, //  móvil
+    fontSize: Platform.OS === "web" ? (width < 400 ? 18 : 22) : 16,
     fontWeight: "bold",
     textAlign: "right",
     color: "#000",
@@ -313,40 +320,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     marginVertical: 4,
-    // no  space-between para evitar desbordes
   },
 
-  // Botón base: elástico
   btn: {
     backgroundColor: "#d9d9d9",
-    flex: 1,                //  quepan 4 por fila
-    marginHorizontal: 4,    //  separación lateral
+    flex: 1,
+    marginHorizontal: 4,
     marginVertical: 3,
-    paddingVertical: Platform.OS === "web" ? 15 : 12, //  móvil
+    paddingVertical: Platform.OS === "web" ? 15 : 12,
     borderRadius: 6,
     alignItems: "center",
     justifyContent: "center",
   },
 
-  // “Limpiar” ocupa 2 columnas
   btnWide2: {
     flex: 2,
   },
 
-  // “0” ocupa 3 columnas
   btnWide3: {
     flex: 3,
   },
 
   btnTextBlack: {
     color: "#000",
-    fontSize: Platform.OS === "web" ? 18 : 16, //  móvil
+    fontSize: Platform.OS === "web" ? 18 : 16,
     fontWeight: "bold",
   },
 
   btnTextRed: {
     color: "#F60C49",
-    fontSize: Platform.OS === "web" ? 20 : 18, //  móvil
+    fontSize: Platform.OS === "web" ? 20 : 18,
     fontWeight: "bold",
   },
 
@@ -358,7 +361,6 @@ const styles = StyleSheet.create({
     marginBottom: 17,
   },
 
-  // Estilos del botón inferior (limpios y combinables)
   bottomBtnContainerBase: {
     alignItems: "flex-end",
   },
@@ -386,6 +388,6 @@ const styles = StyleSheet.create({
   btnNavText: {
     color: "#101942",
     fontWeight: "bold",
-    fontSize: Platform.OS === "web" ? (width < 400 ? 16 : 18) : 16, //  móvil
+    fontSize: Platform.OS === "web" ? (width < 400 ? 16 : 18) : 16,
   },
 });
