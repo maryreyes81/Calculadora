@@ -46,7 +46,7 @@ export default function AboutScreen() {
           s.title,
           {
             fontSize: bp.titleSize,
-            marginTop: Platform.OS === "web" ? 35 : 5, // 👈 web vs móvil
+            marginTop: Platform.OS === "web" ? 35 : 5, //  web vs móvil
           },
         ]}
       >
@@ -117,7 +117,7 @@ function makeStyles() {
       paddingBottom: 32,
     },
     title: {
-      fontWeight: "800",
+      fontWeight: "700",
       color: "#F60C49",
       textAlign: "center",
       marginBottom: 16,
