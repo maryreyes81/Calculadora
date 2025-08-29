@@ -83,7 +83,7 @@ export default function CalculatorScreen() {
         ...(Platform.OS === "web" ? { minHeight: "100vh" as any } : null),
       }}
     >
-      {/* ⬇️ WEB sin scroll: View | ⬇️ MÓVIL con scroll: ScrollView */}
+      {/* ⬇ WEB sin scroll: View |  MÓVIL con scroll: ScrollView */}
       {Platform.OS === "web" ? (
         <View style={[styles.container, { paddingBottom: 140 }]}>
           {/* TOP BUTTON */}
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
 
   titulo: {
-    fontSize: Platform.OS === "web" ? 52 : 28, // ↓ móvil
+    fontSize: Platform.OS === "web" ? 52 : 28, //  móvil
     fontWeight: "bold",
     color: "#F60C49",
     marginTop: Platform.OS === "web" ? -25 : -16,
@@ -280,9 +280,9 @@ const styles = StyleSheet.create({
   calcBox: {
     backgroundColor: "#101942",
     borderRadius: 20,
-    padding: Platform.OS === "web" ? 16 : 12, // ↓ móvil
+    padding: Platform.OS === "web" ? 16 : 12, //  móvil
     width: "100%",
-    maxWidth: Platform.OS === "web" ? 350 : 300, // ↓ móvil
+    maxWidth: Platform.OS === "web" ? 350 : 300, //  móvil
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -297,13 +297,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#d9d9d9",
     width: "100%",
     borderRadius: 6,
-    padding: Platform.OS === "web" ? 12 : 10, // ↓ móvil
+    padding: Platform.OS === "web" ? 12 : 10, //  móvil
     marginTop: 8,
     marginBottom: 10,
   },
 
   displayText: {
-    fontSize: Platform.OS === "web" ? (width < 400 ? 18 : 22) : 16, // ↓ móvil
+    fontSize: Platform.OS === "web" ? (width < 400 ? 18 : 22) : 16, //  móvil
     fontWeight: "bold",
     textAlign: "right",
     color: "#000",
@@ -313,16 +313,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     marginVertical: 4,
-    // no usamos space-between para evitar desbordes
+    // no  space-between para evitar desbordes
   },
 
   // Botón base: elástico
   btn: {
     backgroundColor: "#d9d9d9",
-    flex: 1,                // ← quepan 4 por fila
-    marginHorizontal: 4,    // ← separación lateral
+    flex: 1,                //  quepan 4 por fila
+    marginHorizontal: 4,    //  separación lateral
     marginVertical: 3,
-    paddingVertical: Platform.OS === "web" ? 15 : 12, // ↓ móvil
+    paddingVertical: Platform.OS === "web" ? 15 : 12, //  móvil
     borderRadius: 6,
     alignItems: "center",
     justifyContent: "center",
@@ -340,13 +340,13 @@ const styles = StyleSheet.create({
 
   btnTextBlack: {
     color: "#000",
-    fontSize: Platform.OS === "web" ? 18 : 16, // ↓ móvil
+    fontSize: Platform.OS === "web" ? 18 : 16, //  móvil
     fontWeight: "bold",
   },
 
   btnTextRed: {
     color: "#F60C49",
-    fontSize: Platform.OS === "web" ? 20 : 18, // ↓ móvil
+    fontSize: Platform.OS === "web" ? 20 : 18, //  móvil
     fontWeight: "bold",
   },
 
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 8,
     marginTop: Platform.OS !== "web" && height < 750 ? 25 : 16,
-    marginBottom: 12,
+    marginBottom: 17,
   },
 
   // Estilos del botón inferior (limpios y combinables)
@@ -386,6 +386,6 @@ const styles = StyleSheet.create({
   btnNavText: {
     color: "#101942",
     fontWeight: "bold",
-    fontSize: Platform.OS === "web" ? (width < 400 ? 16 : 18) : 16, // ↓ móvil
+    fontSize: Platform.OS === "web" ? (width < 400 ? 16 : 18) : 16, //  móvil
   },
 });
