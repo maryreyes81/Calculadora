@@ -267,20 +267,20 @@ const styles = StyleSheet.create({
   },
 
   titulo: {
-    fontSize: Platform.OS === "web" ? 52 : 35,
+    fontSize: Platform.OS === "web" ? 52 : 30, // ↓ más chico en móvil
     fontWeight: "bold",
     color: "#F60C49",
-    marginTop: Platform.OS === "web" ? -25 : -30, // tu ajuste
-    marginBottom: 35,
+    marginTop: Platform.OS === "web" ? -25 : -24, // ajuste móvil
+    marginBottom: 28, // un poco menos
     textAlign: "center",
   },
 
   calcBox: {
     backgroundColor: "#101942",
     borderRadius: 20,
-    padding: 15,
+    padding: Platform.OS === "web" ? 15 : 12, // ↓ móvil
     width: "100%",
-    maxWidth: Platform.OS === "web" ? 350 : 320,
+    maxWidth: Platform.OS === "web" ? 350 : 300, // ↓ móvil
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginBottom: Platform.OS !== "web" && height < 750 ? 5 : 30,
+    marginBottom: Platform.OS !== "web" && height < 750 ? 5 : 24, // ↓ móvil
     marginHorizontal: Platform.OS !== "web" && height < 750 ? 0 : 100,
   },
 
@@ -296,13 +296,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#d9d9d9",
     width: "100%",
     borderRadius: 5,
-    padding: 12,
-    marginTop: 10,
-    marginBottom: 15,
+    padding: Platform.OS === "web" ? 12 : 10, // ↓ móvil
+    marginTop: 8,
+    marginBottom: 12,
   },
 
   displayText: {
-    fontSize: width < 400 ? 18 : 22,
+    fontSize: Platform.OS === "web" ? (width < 400 ? 18 : 22) : 16, // ↓ móvil
     fontWeight: "bold",
     textAlign: "right",
     color: "#000",
@@ -312,14 +312,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginVertical: 5,
+    marginVertical: 4,
   },
 
   btnGray: {
     backgroundColor: "#d9d9d9",
     flexBasis: width < 400 ? "30%" : "22%",
     margin: 3,
-    paddingVertical: 15,
+    paddingVertical: Platform.OS === "web" ? 15 : 12, // ↓ móvil
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#d9d9d9",
     flex: 2,
     margin: 3,
-    padding: 15,
+    padding: Platform.OS === "web" ? 15 : 12, // ↓ móvil
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -337,9 +337,9 @@ const styles = StyleSheet.create({
 
   btnGrayWide2: {
     backgroundColor: "#d9d9d9",
-    flex: 2, // cambia a 3 si quieres "0" triple
+    flex: 2, // pon 3 si quieres "0" triple
     margin: 3,
-    padding: 15,
+    padding: Platform.OS === "web" ? 15 : 12, // ↓ móvil
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -347,13 +347,13 @@ const styles = StyleSheet.create({
 
   btnTextBlack: {
     color: "#000",
-    fontSize: 18,
+    fontSize: Platform.OS === "web" ? 18 : 16, // ↓ móvil
     fontWeight: "bold",
   },
 
   btnTextRed: {
     color: "#F60C49",
-    fontSize: 20,
+    fontSize: Platform.OS === "web" ? 20 : 18, // ↓ móvil
     fontWeight: "bold",
   },
 
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
     marginTop: Platform.OS !== "web" && height < 750 ? 25 : 20,
-    marginBottom: 15,
+    marginBottom: 12,
   },
 
   // Estilos del botón inferior (limpios y combinables)
@@ -386,13 +386,13 @@ const styles = StyleSheet.create({
   btnNav: {
     backgroundColor: "#F60C49",
     paddingVertical: 8,
-    paddingHorizontal: 50,
+    paddingHorizontal: 44, // un poco menos
     borderRadius: 8,
   },
 
   btnNavText: {
     color: "#101942",
     fontWeight: "bold",
-    fontSize: width < 400 ? 16 : width < 600 ? 18 : 22,
+    fontSize: Platform.OS === "web" ? (width < 400 ? 16 : 18) : 16, // ↓ móvil
   },
 });
